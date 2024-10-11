@@ -19,4 +19,11 @@ Este projeto é um benchmark em Python que compara o desempenho de diferentes ab
 
 ## Processamento Matemático (CPU-bound)
 
+| Abordagem                      | Tempo de execução |
+|--------------------------------|-------------------|
+| Síncrona                       | 96.39 segundos    |
+| Threads                        | 93.60 segundos    |
+| Processos                      | 32.16 segundos    |
+| Asyncio                        | 95.55 segundos    |
+
 ## Conclusão

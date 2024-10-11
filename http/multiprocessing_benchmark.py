@@ -1,94 +1,94 @@
-from concurrent.futures import ProcessPoolExecutor
 import os
 import time
 import requests
 import multiprocessing
+from concurrent.futures import ProcessPoolExecutor
 
 
-def esvaziar_pasta():
-    pasta = 'pokemons'
-    for arquivo in os.listdir(pasta):
-        caminho_arquivo = os.path.join(pasta, arquivo)
-        os.remove(caminho_arquivo)
+def clear_folder():
+    folder = 'pokemons'
+    for file in os.listdir(folder):
+        file_path = os.path.join(folder, file)
+        os.remove(file_path)
 
 
-def gerar_pokemon(id):
-    nome, sprite = buscar_sprite(id)
-    salvar_sprite(nome, sprite)
+def generate_pokemon(id):
+    name, sprite = fetch_sprite(id)
+    save_sprite(name, sprite)
 
 
-def buscar_sprite(id):
+def fetch_sprite(id):
     url = f"https://pokeapi.co/api/v2/pokemon/{id}/"
     response = requests.get(url)
     data = response.json()
     return data.get('species').get('name'), data.get('sprites').get('front_default')
 
 
-def salvar_sprite(nome, sprite):
+def save_sprite(name, sprite):
     response = requests.get(sprite)
-    with open(f'pokemons/{nome}.png', 'wb') as arquivo:
-        arquivo.write(response.content)
+    with open(f'pokemons/{name}.png', 'wb') as file:
+        file.write(response.content)
 
 
-def processos():
-    processos = []
+def processes():
+    processes = []
     start = time.time()
 
     for i in range(1, 256):
-        processo = multiprocessing.Process(target=gerar_pokemon, args=[i])
-        processo.start()
-        processos.append(processo)
+        process = multiprocessing.Process(target=generate_pokemon, args=[i])
+        process.start()
+        processes.append(process)
 
-    for processo in processos:
-        processo.join()
+    for process in processes:
+        process.join()
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando processos, a execução foi de {duracao} segundos")  # 97.90 segundos
+    duration = end - start
+    print(f"Using processes, execution took {duration} seconds")  # 97.90 seconds
 
 
-def processos_pool_infinito():
+def processes_pool_default_workers():
     start = time.time()
 
     with ProcessPoolExecutor() as executor:
-        executor.map(gerar_pokemon, range(1, 256))
+        executor.map(generate_pokemon, range(1, 256))
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando processos com pool (workers automáticos), a execução foi de {duracao} segundos")  # 80.87 segundos
+    duration = end - start
+    print(f"Using process pool (default workers), execution took {duration} seconds")  # 80.87 seconds
 
 
-def processos_pool_20():
+def processes_pool_20_workers():
     start = time.time()
 
     with ProcessPoolExecutor(max_workers=20) as executor:
-        executor.map(gerar_pokemon, range(1, 256))
+        executor.map(generate_pokemon, range(1, 256))
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando processos com pool (20 workers), a execução foi de {duracao} segundos")  # 78.71 segundos
+    duration = end - start
+    print(f"Using process pool (20 workers), execution took {duration} seconds")  # 78.71 seconds
 
 
-def processos_pool_10():
+def processes_pool_10_workers():
     start = time.time()
 
     with ProcessPoolExecutor(max_workers=10) as executor:
-        executor.map(gerar_pokemon, range(1, 256))
+        executor.map(generate_pokemon, range(1, 256))
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando processos com pool (10 workers), a execução foi de {duracao} segundos")  # 82.11 segundos
+    duration = end - start
+    print(f"Using process pool (10 workers), execution took {duration} seconds")  # 82.11 seconds
 
 
 if __name__ == "__main__":
-    esvaziar_pasta()
-    processos()
+    clear_folder()
+    processes()
 
-    esvaziar_pasta()
-    processos_pool_infinito()
+    clear_folder()
+    processes_pool_default_workers()
 
-    esvaziar_pasta()
-    processos_pool_20()
+    clear_folder()
+    processes_pool_20_workers()
 
-    esvaziar_pasta()
-    processos_pool_10()
+    clear_folder()
+    processes_pool_10_workers()

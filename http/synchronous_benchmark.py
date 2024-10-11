@@ -35,7 +35,7 @@ def main():
         generate_pokemon(i)
     end = time.time()
     duration = end - start
-    print(f"In synchronous approach, execution took {duration} seconds")  # 300.76 seconds
+    print(f"In synchronous approach, execution took {duration} seconds")
 
 
 if __name__ == "__main__":

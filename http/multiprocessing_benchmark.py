@@ -44,7 +44,7 @@ def processes():
 
     end = time.time()
     duration = end - start
-    print(f"Using processes, execution took {duration} seconds")  # 97.90 seconds
+    print(f"Using processes, execution took {duration} seconds")
 
 
 def processes_pool_default_workers():
@@ -55,7 +55,7 @@ def processes_pool_default_workers():
 
     end = time.time()
     duration = end - start
-    print(f"Using process pool (default workers), execution took {duration} seconds")  # 80.87 seconds
+    print(f"Using process pool (default workers), execution took {duration} seconds")
 
 
 def processes_pool_20_workers():
@@ -66,7 +66,7 @@ def processes_pool_20_workers():
 
     end = time.time()
     duration = end - start
-    print(f"Using process pool (20 workers), execution took {duration} seconds")  # 78.71 seconds
+    print(f"Using process pool (20 workers), execution took {duration} seconds")
 
 
 def processes_pool_10_workers():
@@ -77,7 +77,7 @@ def processes_pool_10_workers():
 
     end = time.time()
     duration = end - start
-    print(f"Using process pool (10 workers), execution took {duration} seconds")  # 82.11 seconds
+    print(f"Using process pool (10 workers), execution took {duration} seconds")
 
 
 if __name__ == "__main__":

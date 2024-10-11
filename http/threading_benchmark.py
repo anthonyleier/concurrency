@@ -5,29 +5,29 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 
 
-def esvaziar_pasta():
-    pasta = 'pokemons'
-    for arquivo in os.listdir(pasta):
-        caminho_arquivo = os.path.join(pasta, arquivo)
-        os.remove(caminho_arquivo)
+def clear_folder():
+    folder = 'pokemons'
+    for file in os.listdir(folder):
+        file_path = os.path.join(folder, file)
+        os.remove(file_path)
 
 
-def gerar_pokemon(id):
-    nome, sprite = buscar_sprite(id)
-    salvar_sprite(nome, sprite)
+def generate_pokemon(id):
+    name, sprite = fetch_sprite(id)
+    save_sprite(name, sprite)
 
 
-def buscar_sprite(id):
+def fetch_sprite(id):
     url = f"https://pokeapi.co/api/v2/pokemon/{id}/"
     response = requests.get(url)
     data = response.json()
     return data.get('species').get('name'), data.get('sprites').get('front_default')
 
 
-def salvar_sprite(nome, sprite):
+def save_sprite(name, sprite):
     response = requests.get(sprite)
-    with open(f'pokemons/{nome}.png', 'wb') as arquivo:
-        arquivo.write(response.content)
+    with open(f'pokemons/{name}.png', 'wb') as file:
+        file.write(response.content)
 
 
 def threads():
@@ -35,7 +35,7 @@ def threads():
     start = time.time()
 
     for i in range(1, 256):
-        thread = threading.Thread(target=gerar_pokemon, args=[i])
+        thread = threading.Thread(target=generate_pokemon, args=[i])
         thread.start()
         threads.append(thread)
 
@@ -43,52 +43,52 @@ def threads():
         thread.join()
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando threads, a execução foi de {duracao} segundos")  # 68.83 segundos
+    duration = end - start
+    print(f"Using threads, execution took {duration} seconds")
 
 
-def threads_pool_infinito():
+def threads_pool_default_workers():
     start = time.time()
 
     with ThreadPoolExecutor() as executor:
-        executor.map(gerar_pokemon, range(1, 256))
+        executor.map(generate_pokemon, range(1, 256))
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando threads com pool (workers automáticos), a execução foi de {duracao} segundos")  # 75.99 segundos
+    duration = end - start
+    print(f"Using threads with pool (default workers), execution took {duration} seconds")
 
 
-def threads_pool_20():
+def threads_pool_20_workers():
     start = time.time()
 
     with ThreadPoolExecutor(max_workers=20) as executor:
-        executor.map(gerar_pokemon, range(1, 256))
+        executor.map(generate_pokemon, range(1, 256))
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando threads com pool (20 workers), a execução foi de {duracao} segundos")  # 74.92 segundos
+    duration = end - start
+    print(f"Using threads with pool (20 workers), execution took {duration} seconds")
 
 
-def threads_pool_10():
+def threads_pool_10_workers():
     start = time.time()
 
     with ThreadPoolExecutor(max_workers=10) as executor:
-        executor.map(gerar_pokemon, range(1, 256))
+        executor.map(generate_pokemon, range(1, 256))
 
     end = time.time()
-    duracao = end - start
-    print(f"Usando threads com pool (10 workers), a execução foi de {duracao} segundos")  # 75.15 segundos
+    duration = end - start
+    print(f"Using threads with pool (10 workers), execution took {duration} seconds")
 
 
 if __name__ == "__main__":
-    esvaziar_pasta()
+    clear_folder()
     threads()
 
-    esvaziar_pasta()
-    threads_pool_infinito()
+    clear_folder()
+    threads_pool_default_workers()
 
-    esvaziar_pasta()
-    threads_pool_20()
+    clear_folder()
+    threads_pool_20_workers()
 
-    esvaziar_pasta()
-    threads_pool_10()
+    clear_folder()
+    threads_pool_10_workers()

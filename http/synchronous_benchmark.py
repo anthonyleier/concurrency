@@ -3,41 +3,40 @@ import time
 import requests
 
 
-def esvaziar_pasta():
-    pasta = 'pokemons'
-    for arquivo in os.listdir(pasta):
-        caminho_arquivo = os.path.join(pasta, arquivo)
-        os.remove(caminho_arquivo)
+def clear_folder():
+    folder = 'pokemons'
+    for file in os.listdir(folder):
+        file_path = os.path.join(folder, file)
+        os.remove(file_path)
 
 
-def gerar_pokemon(id):
-    print(f"Processando pokemon {id}")
-    nome, sprite = buscar_sprite(id)
-    salvar_sprite(nome, sprite)
+def generate_pokemon(id):
+    name, sprite = fetch_sprite(id)
+    save_sprite(name, sprite)
 
 
-def buscar_sprite(id):
+def fetch_sprite(id):
     url = f"https://pokeapi.co/api/v2/pokemon/{id}/"
     response = requests.get(url)
     data = response.json()
     return data.get('species').get('name'), data.get('sprites').get('front_default')
 
 
-def salvar_sprite(nome, sprite):
+def save_sprite(name, sprite):
     response = requests.get(sprite)
-    with open(f'pokemons/{nome}.png', 'wb') as arquivo:
-        arquivo.write(response.content)
+    with open(f'pokemons/{name}.png', 'wb') as file:
+        file.write(response.content)
 
 
-def puro():
-    esvaziar_pasta()
+def main():
+    clear_folder()
     start = time.time()
     for i in range(1, 256):
-        gerar_pokemon(i)
+        generate_pokemon(i)
     end = time.time()
-    duracao = end - start
-    print(f"Em Python Puro, a execução foi de {duracao} segundos")  # 300.76 segundos
+    duration = end - start
+    print(f"In synchronous approach, execution took {duration} seconds")  # 300.76 seconds
 
 
 if __name__ == "__main__":
-    puro()
+    main()

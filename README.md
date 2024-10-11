@@ -5,3 +5,5 @@ Este projeto é um benchmark em Python que compara o desempenho de diferentes ab
 ## Requisição HTTP (IO-bound)
 
 ## Encontrar números primos (CPU-bound)
+
+## Conclusão
